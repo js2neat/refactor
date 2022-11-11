@@ -1,0 +1,51 @@
+def can_hike_to(map,start,dest,supplies):
+    '''
+    destination is north-west of the start
+    supplies>=0
+    '''
+    current = start
+    while current!=dest: # untill current loc not equal to destination location, keep iterating
+        if current[0] == dest[0]: # the destination is to the west of the start
+            x = current[0]
+            y = current[1]
+            change_in_elev = abs(map[x][y-1]-map[x][y])
+            if change_in_elev<=supplies:
+                supplies-=change_in_elev
+                current[0] = x
+                current[1] = y-1
+            else:# supplies fall short
+                return False    
+
+        elif current[1] == dest[1]: # the destination is to the north of the start
+            x = current[0]
+            y = current[1]
+            change_in_elev = abs(map[x-1][y]-map[x][y])
+            if change_in_elev<=supplies:
+                supplies-=change_in_elev
+                current[0] = x-1
+                current[1] = y
+            else:# supplies fall short
+                return False
+
+        else: # destination is to the North-West of the start
+            x = current[0]
+            y = current[1]
+            change_in_elev_North = abs(map[x-1][y]-map[x][y])
+            change_in_elev_West = abs(map[x][y-1]-map[x][y])
+            #print change_in_elev_North, change_in_elev_West, supplies
+            if change_in_elev_North<=change_in_elev_West: # if North is less or equally steeper w.r.t. West then take west
+                if change_in_elev_North<=supplies:
+                    supplies-=change_in_elev_North
+                    current[0] = x-1
+                    current[1] = y
+                else:# supplies fall short
+                    return False    
+            else: # West is less steeper than North, so take West
+                if change_in_elev_West<=supplies:
+                    supplies-=change_in_elev_West
+                    current[0] = x
+                    current[1] = y-1
+                else: # supplies fall short
+                    return False                    
+
+    return True # destination reached
